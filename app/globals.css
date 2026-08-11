@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --pink-light: #fff0f5;
+    --pink-pastel: #ffd1dc;
+    --pink-accent: #ff85a2;
+    --pink-deep: #db2777;
+    --lilac-pastel: #e9d5ff;
+    --gold-accent: #fde047;
+    --retro-window-bg: #fff5f8;
+  }
+
+  body {
+    background-color: #ffd6e8;
+    color: #4a154b;
+    font-family: 'Quicksand', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    user-select: none;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom retro Y2K window borders */
+.retro-box-outset {
+  border: 3px solid #ffffff;
+  border-right-color: #d19bb0;
+  border-bottom-color: #d19bb0;
+  box-shadow: 3px 3px 0px rgba(74, 21, 75, 0.15);
+}
+
+.retro-box-inset {
+  border: 2px solid #d19bb0;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.retro-button {
+  background: linear-gradient(180deg, #ffffff 0%, #ffe4ed 100%);
+  border: 2px solid #ffffff;
+  border-right-color: #b86b86;
+  border-bottom-color: #b86b86;
+  box-shadow: 2px 2px 0px #4a154b;
+  transition: all 0.05s ease;
+}
+
+.retro-button:active {
+  border: 2px solid #b86b86;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  box-shadow: 0px 0px 0px transparent;
+  transform: translate(2px, 2px);
+}
+
+/* Heart glowing animation */
+@keyframes heartPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(255, 133, 162, 0.8));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 20px rgba(236, 72, 153, 1));
+  }
+}
+
+.animate-heart-pulse {
+  animation: heartPulse 1.8s infinite ease-in-out;
+}
+
+/* Sparkle floating animation */
+@keyframes floatSparkle {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-12px) rotate(15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.8;
+  }
+}
+
+.animate-float-sparkle {
+  animation: floatSparkle 3s infinite ease-in-out;
+}
+
+/* Retro pixel scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #ffe4ed;
+  border-left: 1px solid #d19bb0;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff85a2;
+  border: 2px solid #ffffff;
+  border-right-color: #b86b86;
+  border-bottom-color: #b86b86;
+}
