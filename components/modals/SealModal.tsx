@@ -22,6 +22,7 @@ export const SealModal: React.FC<SealModalProps> = ({ onNext }) => {
   const handleStartHold = () => {
     if (isLoading) return;
     setIsHolding(true);
+    sound.startBgMusic();
     sound.playClick();
   };
 

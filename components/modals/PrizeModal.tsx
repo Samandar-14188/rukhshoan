@@ -137,7 +137,7 @@ export const PrizeModal: React.FC<PrizeModalProps> = ({ onNext }) => {
                   <Sparkles className="w-4 h-4 animate-spin" />
                 </div>
                 <h3 className="text-base sm:text-lg font-extrabold text-[#db2777]">
-                  TABRIKLAYMIZ! Siz 500,000 SO'M pul mukofotini yutib oldingiz! 🎉
+                  TABRIKLAYMIZ! Siz 400,000 SO'M pul mukofotini yutib oldingiz! 🎉
                 </h3>
               </div>
 

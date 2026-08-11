@@ -32,9 +32,8 @@ export const RetroDesktop: React.FC<RetroDesktopProps> = ({
   }, []);
 
   const toggleMute = () => {
-    sound.muted = !isMuted;
-    setIsMuted(!isMuted);
-    sound.playClick();
+    const mutedState = sound.toggleMute();
+    setIsMuted(mutedState);
   };
 
   return (

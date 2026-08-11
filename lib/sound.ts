@@ -1,8 +1,10 @@
-// Web Audio API Sound Synthesizer for Y2K Retro Experience
+// Web Audio API Sound Synthesizer & Background Music Manager for Y2K Retro Experience
 
 class SoundManager {
   private ctx: AudioContext | null = null;
+  private bgAudio: HTMLAudioElement | null = null;
   public muted: boolean = false;
+  public bgmStarted: boolean = false;
 
   private initCtx() {
     if (!this.ctx && typeof window !== 'undefined') {
@@ -14,6 +16,41 @@ class SoundManager {
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
+  }
+
+  public startBgMusic() {
+    if (typeof window === 'undefined') return;
+    this.initCtx();
+
+    if (!this.bgAudio) {
+      this.bgAudio = new Audio('/music/song.mp3');
+      this.bgAudio.loop = true;
+      this.bgAudio.volume = 0.5;
+    }
+
+    if (!this.muted) {
+      this.bgAudio.play().then(() => {
+        this.bgmStarted = true;
+      }).catch((err) => {
+        console.log('Audio autoplay prevented or file missing:', err);
+      });
+    }
+  }
+
+  public toggleMute(): boolean {
+    this.muted = !this.muted;
+
+    if (this.bgAudio) {
+      if (this.muted) {
+        this.bgAudio.pause();
+      } else {
+        this.bgAudio.play().catch(() => {});
+      }
+    } else if (!this.muted) {
+      this.startBgMusic();
+    }
+
+    return this.muted;
   }
 
   public playClick() {

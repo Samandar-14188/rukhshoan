@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Mail, Heart, Sparkles, RotateCcw, FileText } from 'lucide-react';
+import { Mail, Heart, RotateCcw, FileText, FastForward } from 'lucide-react';
 import { RetroWindow } from '../RetroWindow';
 import { sound } from '@/lib/sound';
 
@@ -11,8 +11,20 @@ interface LetterModalProps {
   onRestart: () => void;
 }
 
+const LETTER_TEXT = `Qadrli va yagona Ruxshona... 🌸✨
+
+Bugun sening hayotingdagi eng go'zal va sehrli kunlardan biri — 19 yoshga to'lgan kuning! 🎂
+
+Siz mening hayotimga kirib kelganingizdan beri har bir kunim quvonch va mazmunga to'ldi. Shirin tabassumingiz, mehribon va begubor qalbingiz atrofga doimo iliqlik ulashadi.
+
+Ushbu yangi yoshingizda sizga dunyodagi eng cheksiz baxt, mustahkam salomatlik va barcha ezgu orzularingiz ushalishini tilayman. Har doim shunday quvnoq, samimiy va jozibali bo'lib qoling!
+
+Tug'ilgan kuning muborak bo'lsin, mening eng qadrli insonim! ❤️✨`;
+
 export const LetterModal: React.FC<LetterModalProps> = ({ onRestart }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [typedIndex, setTypedIndex] = useState<number>(0);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const handleOpenEnvelope = () => {
     if (isOpen) return;
@@ -27,6 +39,41 @@ export const LetterModal: React.FC<LetterModalProps> = ({ onRestart }) => {
       colors: ['#ff85a2', '#ffd1dc', '#fde047', '#e9d5ff', '#ffffff'],
     });
   };
+
+  // Typewriter text effect
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (typedIndex < LETTER_TEXT.length) {
+      const timer = setTimeout(() => {
+        setTypedIndex((prev) => prev + 1);
+
+        // Sound effect on typing
+        if (typedIndex % 4 === 0) {
+          sound.playTick(900);
+        }
+      }, 35);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, typedIndex]);
+
+  // Smooth auto-scroll to bottom as text types
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [typedIndex]);
+
+  const handleSkipTypewriter = () => {
+    sound.playClick();
+    setTypedIndex(LETTER_TEXT.length);
+  };
+
+  const isTypingComplete = typedIndex >= LETTER_TEXT.length;
 
   return (
     <RetroWindow title="LETTER.EXE" stepNumber={6} totalSteps={6}>
@@ -84,50 +131,39 @@ export const LetterModal: React.FC<LetterModalProps> = ({ onRestart }) => {
                     <FileText className="w-4 h-4 text-pink-500" />
                     <span>MESSAGE.TXT - Ruxshona 19th Birthday</span>
                   </div>
-                  <span className="text-[10px] text-pink-400">FAYL: MAXSUS</span>
+                  <div className="flex items-center space-x-2">
+                    {!isTypingComplete && (
+                      <button
+                        onClick={handleSkipTypewriter}
+                        className="text-[10px] bg-pink-200 hover:bg-pink-300 text-pink-800 px-2 py-0.5 rounded font-mono font-bold flex items-center space-x-1"
+                        title="Tezlashtirish"
+                      >
+                        <FastForward className="w-3 h-3" />
+                        <span>TEZLASHTIRISH</span>
+                      </button>
+                    )}
+                    <span className="text-[10px] text-pink-400">FAYL: MAXSUS</span>
+                  </div>
                 </div>
 
-                {/* Notepad Body Text */}
-                <div className="p-4 sm:p-6 font-sans text-xs sm:text-sm leading-relaxed text-[#4a154b] max-h-72 overflow-y-auto space-y-3 bg-[#fffafc]">
-                  <p className="font-bold text-sm sm:text-base text-[#db2777]">
-                    Qadrli va suyukli Ruxshona! 🌸✨
-                  </p>
-
-                  <p>
-                    Bugun sizning hayotingizdagi eng yorqin va sehrli kunlardan biri — <strong>19 yoshga</strong> to'lgan kuningiz! 🎂
-                  </p>
-
-                  <p>
-                    Siz mening hayotimdagi eng qadrli, eng samimiy va chiroyli insonimsiz. Sizning shirin kulgularingiz, mehribon qalbingiz va har bir so'zingiz atrofga doimo iliqlik va quvonch ulashadi.
-                  </p>
-
-                  <p>
-                    Ushbu yangi yoshingizda sizga cheksiz baxt, mustahkam salomatlik, o'qish va ishlaringizda ulkan zafarlar tilayman. Niyat qilgan barcha orzuleringiz va maqsadlaringiz ro'yobga chiqsin!
-                  </p>
-
-                  <p>
-                    Har bir kuningiz quvonchli lahzalarga, unutilmas xotiralarga va samimiy tabassumlarga boy bo'lsin. Har doim shunday go'zal, samimiy va betakror bo'lib qoling!
-                  </p>
-
-                  <div className="pt-3 border-t border-pink-100 flex flex-col items-end">
-                    <p className="font-bold text-xs text-[#db2777]">
-                      Cheksiz mehr va hurmat bilan, ❤️
-                    </p>
-                    <p className="font-mono text-[11px] text-pink-400">
-                      Sizni juda ham yaxshi ko'ruvchi insoningiz ✨
-                    </p>
-                  </div>
+                {/* Notepad Body Text with Typewriter Animation */}
+                <div
+                  ref={scrollRef}
+                  className="p-4 sm:p-6 font-sans text-xs sm:text-sm leading-relaxed text-[#4a154b] h-64 sm:h-72 overflow-y-auto whitespace-pre-wrap bg-[#fffafc] font-medium border-t border-pink-100"
+                >
+                  {LETTER_TEXT.slice(0, typedIndex)}
+                  <span className="inline-block w-2 h-4 bg-pink-500 ml-0.5 animate-pulse align-middle" />
                 </div>
               </div>
 
               {/* Replay/Restart Button */}
-              <div className="pt-2">
+              <div className="pt-2 flex justify-center space-x-3">
                 <button
                   onClick={() => {
                     sound.playClick();
                     onRestart();
                   }}
-                  className="retro-button px-6 py-2.5 font-mono font-bold text-xs sm:text-sm text-[#db2777] hover:text-pink-700 flex items-center space-x-2 mx-auto"
+                  className="retro-button px-6 py-2.5 font-mono font-bold text-xs sm:text-sm text-[#db2777] hover:text-pink-700 flex items-center space-x-2"
                 >
                   <RotateCcw className="w-4 h-4 text-pink-600" />
                   <span>BOSHIDAN KO'RISH 🔄</span>
